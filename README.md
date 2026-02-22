@@ -6,6 +6,9 @@
 - Tailwind CSS
 - Shadcn Vue
 - VueUse
+- Better Auth
+- Drizzle ORM
+- NeonDB
 
 ### Nuxt Modules
 
