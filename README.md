@@ -9,6 +9,8 @@
 - Better Auth
 - Drizzle ORM
 - NeonDB
+- oRPC
+- Tanstack Vue Query
 
 ### Nuxt Modules
 

@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <div>
+  <AuthProvider>
     <slot />
-  </div>
+  </AuthProvider>
 </template>

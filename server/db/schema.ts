@@ -1,5 +1,6 @@
+import { createId } from '@paralleldrive/cuid2'
 import { relations } from 'drizzle-orm'
-import { boolean, index, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
+import { boolean, index, jsonb, pgEnum, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
 
 export const user = pgTable('user', {
   id: text('id').primaryKey(),
@@ -73,9 +74,48 @@ export const verification = pgTable(
   table => [index('verification_identifier_idx').on(table.identifier)],
 )
 
+export const importStatus = pgEnum(
+  'import_status',
+  [
+    'importing',
+    'completed',
+    'failed',
+  ],
+)
+
+export const exportStatus = pgEnum(
+  'export_status',
+  [
+    'exporting',
+    'completed',
+    'failed',
+    'cancelled',
+  ],
+)
+export const project = pgTable('project', {
+  id: text('id').primaryKey().$defaultFn(() => createId()),
+  name: text('name').notNull(),
+  ownerId: text('owner_id').notNull().references(() => user.id, { onDelete: 'cascade' }),
+  importStatus: importStatus('import_status'),
+  exportStatus: exportStatus('export_status'),
+  exportRepoUrl: text('export_repo_url'),
+  settings: jsonb('settings').$type<{
+    installCommand?: string
+    devCommand?: string
+  }>(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at')
+    .defaultNow()
+    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .notNull(),
+}, table => [
+  index('project_ownerId_idx').on(table.ownerId),
+])
+
 export const userRelations = relations(user, ({ many }) => ({
   sessions: many(session),
   accounts: many(account),
+  projects: many(project),
 }))
 
 export const sessionRelations = relations(session, ({ one }) => ({
@@ -88,6 +128,13 @@ export const sessionRelations = relations(session, ({ one }) => ({
 export const accountRelations = relations(account, ({ one }) => ({
   user: one(user, {
     fields: [account.userId],
+    references: [user.id],
+  }),
+}))
+
+export const projectRelations = relations(project, ({ one }) => ({
+  owner: one(user, {
+    fields: [project.ownerId],
     references: [user.id],
   }),
 }))
