@@ -14,6 +14,8 @@ export default defineNuxtConfig({
     '@nuxtjs/color-mode',
     '@vueuse/nuxt',
     '@nuxt/fonts',
+    '@nuxt/image',
+    '@nuxt/icon',
   ],
   shadcn: {
     prefix: '',
@@ -24,6 +26,12 @@ export default defineNuxtConfig({
     preference: 'dark',
   },
   fonts: {
-    priority: ['bunny', 'google'],
+    provider: 'bunny',
+    families: [
+      {
+        name: 'Poppins',
+        provider: 'bunny',
+      },
+    ],
   },
 })

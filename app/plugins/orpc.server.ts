@@ -2,12 +2,18 @@ import { createRouterClient } from '@orpc/server'
 import { createTanstackQueryUtils } from '@orpc/tanstack-query'
 import { routers } from '~~/server/routers'
 
-export default defineNuxtPlugin(() => {
+export default defineNuxtPlugin(async () => {
   const event = useRequestEvent()
+
+  const session = event
+    ? await auth.api.getSession({
+        headers: event.headers,
+      })
+    : null
 
   const client = createRouterClient(routers, {
     context: {
-      headers: event?.headers,
+      session: session?.session ?? null,
     },
   })
 
