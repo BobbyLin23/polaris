@@ -1,6 +1,7 @@
 import { createRouterClient } from '@orpc/server'
 import { createTanstackQueryUtils } from '@orpc/tanstack-query'
 import { routers } from '~~/server/routers'
+import { auth } from '~~/server/utils/auth'
 
 export default defineNuxtPlugin(async () => {
   const event = useRequestEvent()

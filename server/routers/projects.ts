@@ -1,4 +1,5 @@
 import { ORPCError } from '@orpc/server'
+import { eq } from 'drizzle-orm'
 import { z } from 'zod'
 import { db } from '../db'
 import { project } from '../db/schema'
@@ -76,3 +77,60 @@ export const getProjectsPartial = authed.route({
 
     return res
   })
+
+export const getProjectById = authed.route({
+  method: 'GET',
+  path: '/projects/:projectId',
+  summary: 'Get project by id',
+  tags: ['Projects'],
+})
+  .input(
+    z.object({
+      id: z.string(),
+    }),
+  )
+  .output(projectSelectSchema)
+  .handler(async ({ context, input }) => {
+    const res = await db.query.project.findFirst({
+      where: {
+        id: input.id,
+        ownerId: context.session.userId,
+      },
+    })
+
+    if (!res) {
+      throw new ORPCError('NOT_FOUND')
+    }
+
+    return res
+  })
+
+export const renameProject = authed.route({
+  method: 'PUT',
+  path: '/projects/:projectId',
+  summary: 'Rename project',
+  tags: ['Projects'],
+}).input(
+  z.object({
+    id: z.string(),
+    name: z.string(),
+  }),
+).handler(async ({ input, context }) => {
+  const currentProject = await db.query.project.findFirst({
+    where: {
+      id: input.id,
+    },
+  })
+
+  if (!currentProject) {
+    throw new ORPCError('NOT_FOUND')
+  }
+
+  if (currentProject.ownerId !== context.session.userId) {
+    throw new ORPCError('FORBIDDEN')
+  }
+
+  await db.update(project).set({
+    name: input.name,
+  }).where(eq(project.id, input.id))
+})
