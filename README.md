@@ -11,6 +11,9 @@
 - NeonDB
 - oRPC
 - Tanstack Vue Query
+- Inngest
+- AI SDK
+- Firecrawl
 
 ### Nuxt Modules
 

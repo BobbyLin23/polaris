@@ -12,6 +12,7 @@
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
+    "@mendable/firecrawl-js": "^4.13.0",
     "@neondatabase/serverless": "^1.0.2",
     "@nuxt/fonts": "^0.14.0",
     "@openrouter/ai-sdk-provider": "^2.2.3",
