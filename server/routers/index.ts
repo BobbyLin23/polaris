@@ -1,4 +1,14 @@
 import {
+  createFile,
+  createFolder,
+  deleteFile,
+  getFile,
+  getFiles,
+  getFolderContent,
+  renameFile,
+  updateFile,
+} from './files'
+import {
   createProject,
   getProjectById,
   getProjects,
@@ -13,5 +23,15 @@ export const routers = {
     getPartial: getProjectsPartial,
     getById: getProjectById,
     rename: renameProject,
+  },
+  files: {
+    getFolder: getFolderContent,
+    getFiles,
+    createFile,
+    createFolder,
+    renameFile,
+    deleteFile,
+    updateFile,
+    getFile,
   },
 }

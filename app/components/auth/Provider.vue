@@ -5,13 +5,12 @@ const session = authClient.useSession()
 </script>
 
 <template>
-  <template v-if="session.isPending">
-    <AuthLoadingView />
-  </template>
-  <template v-else-if="session.data">
+  <AuthLoadingView v-if="session.isPending" />
+  <AuthUnauhenticView v-else-if="!session.data" />
+  <div
+    v-show="!session.isPending && !!session.data"
+    class="contents"
+  >
     <slot />
-  </template>
-  <template v-else>
-    <AuthUnauhenticView />
-  </template>
+  </div>
 </template>

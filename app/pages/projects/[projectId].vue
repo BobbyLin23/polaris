@@ -19,7 +19,7 @@ const projectId = route.params.projectId as string
         </ResizablePanel>
         <ResizableHandle />
         <ResizablePanel :default-size="60">
-          <ProjectsIdView />
+          <ProjectsIdView :project-id="projectId" />
         </ResizablePanel>
       </ResizablePanelGroup>
     </div>

@@ -24,5 +24,12 @@ export const relations = defineRelations(schema, r => ({
       from: r.project.ownerId,
       to: r.user.id,
     }),
+    files: r.many.file(),
+  },
+  file: {
+    project: r.one.project({
+      from: r.file.projectId,
+      to: r.project.id,
+    }),
   },
 }))

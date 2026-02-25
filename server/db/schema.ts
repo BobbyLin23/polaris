@@ -110,3 +110,30 @@ export const project = pgTable('project', {
 }, table => [
   index('project_ownerId_idx').on(table.ownerId),
 ])
+
+export const fileType = pgEnum(
+  'file_type',
+  [
+    'file',
+    'folder',
+  ],
+)
+
+export const file = pgTable('file', {
+  id: text('id').primaryKey().$defaultFn(() => createId()),
+  projectId: text('project_id').notNull().references(() => project.id, { onDelete: 'cascade' }),
+  parentId: text('parent_id'),
+  name: text('name').notNull(),
+  type: fileType('type').notNull(),
+  content: text('content'),
+  storageId: text('storage_id'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at')
+    .defaultNow()
+    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .notNull(),
+}, table => [
+  index('file_projectId_idx').on(table.projectId),
+  index('file_parentId_idx').on(table.parentId),
+  index('file_projectId_parentId_idx').on(table.projectId, table.parentId),
+])

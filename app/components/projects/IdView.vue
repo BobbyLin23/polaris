@@ -1,6 +1,10 @@
 <script lang="ts" setup>
 import { cn } from '~/lib/utils'
 
+defineProps<{
+  projectId: string
+}>()
+
 const activeView = ref<'editor' | 'preview'>('editor')
 </script>
 
@@ -26,7 +30,18 @@ const activeView = ref<'editor' | 'preview'>('editor')
     </nav>
     <div class="flex-1 relative">
       <div :class="cn('absolute inset-0', activeView === 'editor' ? 'visible' : 'invisible')">
-        <div>Editor</div>
+        <ResizablePanelGroup
+          direction="horizontal"
+          class="h-full"
+        >
+          <ResizablePanel :default-size="40" :min-size="20" :max-size="80">
+            <FileExplorer :project-id="projectId" />
+          </ResizablePanel>
+          <ResizableHandle />
+          <ResizablePanel>
+            Editor
+          </ResizablePanel>
+        </ResizablePanelGroup>
       </div>
       <div :class="cn('absolute inset-0', activeView === 'preview' ? 'visible' : 'invisible')">
         <div>Preview</div>
