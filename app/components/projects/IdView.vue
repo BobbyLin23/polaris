@@ -39,7 +39,7 @@ const activeView = ref<'editor' | 'preview'>('editor')
           </ResizablePanel>
           <ResizableHandle />
           <ResizablePanel>
-            Editor
+            <EditorView :project-id="projectId" />
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>

@@ -18,6 +18,8 @@ watch(() => props.item.name, (name) => {
   displayName.value = name
 })
 
+const { openFile, closeTab, activeTabId } = useEditor(props.projectId)
+
 const { data: folderContents } = useFolderContents({
   projectId: props.item.projectId,
   parentId: props.item.id,
@@ -102,10 +104,12 @@ function startCreating(type: 'file' | 'folder') {
       v-else
       :item="item"
       :level="level"
-      :is-active="false"
-      @click="() => {}"
+      :is-active="item.id === activeTabId"
+      @click="() => openFile(item.id, { pinned: false })"
+      @double-click="openFile(item.id, { pinned: true })"
       @rename="isRenaming = true"
       @delete="() => {
+        closeTab(item.id)
         deleteFile({
           fileId: item.id,
         })

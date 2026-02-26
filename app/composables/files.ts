@@ -1,5 +1,5 @@
 import { createId } from '@paralleldrive/cuid2'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
+import { skipToken, useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 
 function sortFolderContents(files: SelectFile[]) {
   return [...files].sort((a, b) => {
@@ -127,7 +127,7 @@ export function useRenameFile({ projectId, fileId, parentId }: {
   return useMutation($orpc.files.renameFile.mutationOptions({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: $orpc.files.getFolder.queryKey({ input: { projectId, parentId } }) })
-      queryClient.invalidateQueries({ queryKey: $orpc.files.getFile.queryKey({ input: { projectId, fileId } }) })
+      queryClient.invalidateQueries({ queryKey: $orpc.files.getFile.queryKey({ input: { fileId } }) })
     },
   }))
 }
@@ -143,7 +143,41 @@ export function useDeleteFile({ projectId, fileId, parentId }: {
   return useMutation($orpc.files.deleteFile.mutationOptions({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: $orpc.files.getFolder.queryKey({ input: { projectId, parentId } }) })
-      queryClient.invalidateQueries({ queryKey: $orpc.files.getFile.queryKey({ input: { projectId, fileId } }) })
+      queryClient.invalidateQueries({ queryKey: $orpc.files.getFile.queryKey({ input: { fileId } }) })
+    },
+  }))
+}
+
+export function useFile(fileId: string | null) {
+  const { $orpc } = useNuxtApp()
+  return useQuery({
+    ...$orpc.files.getFile.queryOptions({
+      input: fileId ? { fileId } : skipToken,
+    }),
+  })
+}
+
+export function useFilePath(fileId: string | null) {
+  const { $orpc } = useNuxtApp()
+  return useQuery({
+    ...$orpc.files.getFilePath.queryOptions({
+      input: fileId ? { fileId } : skipToken,
+    }),
+  })
+}
+
+export function useUpdateFile({ projectId, fileId, parentId }: {
+  projectId: string
+  fileId: string
+  parentId?: string
+}) {
+  const { $orpc } = useNuxtApp()
+  const queryClient = useQueryClient()
+
+  return useMutation($orpc.files.updateFile.mutationOptions({
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: $orpc.files.getFolder.queryKey({ input: { projectId, parentId } }) })
+      queryClient.invalidateQueries({ queryKey: $orpc.files.getFile.queryKey({ input: { fileId } }) })
     },
   }))
 }

@@ -6,6 +6,7 @@
 - Tailwind CSS
 - Shadcn Vue
 - VueUse
+- Pinia
 - Better Auth
 - Drizzle ORM
 - NeonDB

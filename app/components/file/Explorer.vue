@@ -6,7 +6,7 @@ const props = defineProps<{
   projectId: string
 }>()
 
-const isOpen = ref(false)
+const isOpen = ref(true)
 const isCreating = ref<'file' | 'folder' | null>(null)
 const collapseKey = ref(0)
 

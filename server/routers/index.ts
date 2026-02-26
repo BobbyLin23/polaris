@@ -3,6 +3,7 @@ import {
   createFolder,
   deleteFile,
   getFile,
+  getFilePath,
   getFiles,
   getFolderContent,
   renameFile,
@@ -33,5 +34,6 @@ export const routers = {
     deleteFile,
     updateFile,
     getFile,
+    getFilePath,
   },
 }

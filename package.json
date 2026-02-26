@@ -13,6 +13,20 @@
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
+    "@codemirror/autocomplete": "^6.20.0",
+    "@codemirror/commands": "^6.10.2",
+    "@codemirror/lang-css": "^6.3.1",
+    "@codemirror/lang-html": "^6.4.11",
+    "@codemirror/lang-javascript": "^6.2.4",
+    "@codemirror/lang-json": "^6.0.2",
+    "@codemirror/lang-markdown": "^6.5.0",
+    "@codemirror/lang-python": "^6.2.1",
+    "@codemirror/language": "^6.12.2",
+    "@codemirror/lint": "^6.9.4",
+    "@codemirror/search": "^6.6.0",
+    "@codemirror/state": "^6.5.4",
+    "@codemirror/theme-one-dark": "^6.1.3",
+    "@codemirror/view": "^6.39.15",
     "@mendable/firecrawl-js": "^4.13.1",
     "@neondatabase/serverless": "^1.0.2",
     "@nuxt/fonts": "^0.14.0",
@@ -23,6 +37,9 @@
     "@orpc/server": "^1.13.5",
     "@orpc/tanstack-query": "^1.13.5",
     "@paralleldrive/cuid2": "^3.3.0",
+    "@pinia/nuxt": "0.11.3",
+    "@replit/codemirror-indentation-markers": "^6.5.3",
+    "@replit/codemirror-minimap": "^0.5.2",
     "@tanstack/vue-query": "^5.92.9",
     "ai": "^6.0.99",
     "better-auth": "^1.4.19",
@@ -51,12 +68,14 @@
     "@iconify-json/vscode-icons": "^1.2.44",
     "@nuxtjs/color-mode": "^4.0.0",
     "@tailwindcss/vite": "^4.2.1",
+    "@types/node": "^25.3.1",
     "@types/splitpanes": "^2.2.6",
     "@vueuse/core": "^14.2.1",
     "@vueuse/nuxt": "^14.2.1",
     "drizzle-kit": "1.0.0-beta.15-859cf75",
     "eslint": "^10.0.2",
     "tailwindcss": "^4.2.1",
-    "tw-animate-css": "^1.4.0"
+    "tw-animate-css": "^1.4.0",
+    "typescript": "^5.9.3"
   }
 }

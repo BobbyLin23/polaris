@@ -1,3 +1,4 @@
+import type { SelectFile } from '../../shared/types'
 import { ORPCError } from '@orpc/server'
 import { and, eq, isNull } from 'drizzle-orm'
 import z from 'zod'
@@ -147,10 +148,9 @@ export const getFile = authed.route({
   tags: ['Files'],
 })
   .input(z.object({
-    projectId: z.string(),
     fileId: z.string(),
   }))
-  .output(z.object({ id: z.string() }))
+  .output(fileSelectSchema)
   .handler(async ({ context, input }) => {
     const file = await db.query.file.findFirst({
       where: {
@@ -402,4 +402,71 @@ export const updateFile = authed.route({
     await db.update(project).set({
       updatedAt: new Date(),
     }).where(eq(project.id, currentFile.projectId))
+  })
+
+export const getFilePath = authed.route({
+  method: 'GET',
+  path: '/files/path/:fileId',
+  summary: 'Get file path',
+  tags: ['Files'],
+})
+  .input(z.object({
+    fileId: z.string(),
+  }))
+  .output(z.array(z.object({
+    id: z.string(),
+    name: z.string(),
+  })))
+  .handler(async ({ context, input }) => {
+    const file = await db.query.file.findFirst({
+      where: {
+        id: input.fileId,
+      },
+    })
+
+    if (!file) {
+      throw new ORPCError('NOT_FOUND')
+    }
+
+    const project = await db.query.project.findFirst({
+      where: {
+        id: file.projectId,
+      },
+    })
+
+    if (!project) {
+      throw new ORPCError('NOT_FOUND')
+    }
+
+    if (project.ownerId !== context.session.userId) {
+      throw new ORPCError('FORBIDDEN')
+    }
+
+    const path: {
+      id: string
+      name: string
+    }[] = []
+
+    let currentId: string | null = input.fileId
+
+    while (currentId) {
+      const currentFile: SelectFile | undefined = await db.query.file.findFirst({
+        where: {
+          id: currentId,
+        },
+      })
+
+      if (!currentFile) {
+        break
+      }
+
+      path.unshift({
+        id: currentFile.id,
+        name: currentFile.name,
+      })
+
+      currentId = currentFile.parentId
+    }
+
+    return path
   })

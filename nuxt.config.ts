@@ -16,6 +16,7 @@ export default defineNuxtConfig({
     '@nuxt/fonts',
     '@nuxt/image',
     '@nuxt/icon',
+    '@pinia/nuxt',
   ],
   shadcn: {
     prefix: '',
