@@ -18,6 +18,9 @@ interface MessageSentEvent {
   name: 'message/sent'
   data: {
     messageId: string
+    conversationId: string
+    projectId: string
+    message: string
   }
 }
 

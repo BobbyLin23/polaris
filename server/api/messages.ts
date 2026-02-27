@@ -1,3 +1,4 @@
+import { eq } from 'drizzle-orm'
 import z from 'zod'
 import { inngest } from '~~/inngest'
 import { db } from '../db'
@@ -47,6 +48,32 @@ export default defineEventHandler(async (event) => {
 
     const projectId = conversation.projectId
 
+    const processingMessages = await db.query.message.findMany({
+      where: {
+        projectId,
+        status: 'processing',
+      },
+    })
+
+    if (processingMessages.length) {
+      await Promise.all(
+        processingMessages.map(async (msg) => {
+          await inngest.send({
+            name: 'message/cancel',
+            data: {
+              messageId: msg.id,
+            },
+          })
+
+          await db.update(message).set({
+            status: 'cancelled',
+          }).where(eq(message.id, msg.id))
+
+          return msg.id
+        }),
+      )
+    }
+
     await db.insert(message).values({
       conversationId,
       projectId,
@@ -73,6 +100,9 @@ export default defineEventHandler(async (event) => {
       name: 'message/sent',
       data: {
         messageId: assistantMessage.id,
+        conversationId,
+        projectId,
+        message,
       },
     })
 

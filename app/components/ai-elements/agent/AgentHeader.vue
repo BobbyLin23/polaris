@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from 'vue'
+import { BotIcon } from 'lucide-vue-next'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
-import { BotIcon } from 'lucide-vue-next'
 
 const props = defineProps<{
   name: string

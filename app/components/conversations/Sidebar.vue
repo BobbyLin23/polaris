@@ -16,6 +16,8 @@ const input = ref('')
 
 const selectedConversationId = ref<string | null>(null)
 
+const pastConversationsOpen = ref(false)
+
 const { mutateAsync: createConversation } = useCreateConversation(props.projectId)
 
 const { data: conversations } = useConversations(props.projectId)
@@ -32,7 +34,6 @@ const isProcessing = computed(() => {
   return conversationMessages.value?.some(message => message.status === 'processing') ?? false
 })
 
-// Poll for updates while AI is processing
 watch(isProcessing, (processing) => {
   if (!processing)
     return
@@ -63,6 +64,7 @@ async function handleCreateConversation() {
 async function handleSubmit(message: PromptInputMessage) {
   if (isProcessing.value && !message.text) {
     input.value = ''
+    await handleCancel()
     return
   }
 
@@ -92,9 +94,26 @@ async function handleSubmit(message: PromptInputMessage) {
 
   input.value = ''
 }
+
+async function handleCancel() {
+  try {
+    await ky.post('/api/messages/cancel', {
+      json: { projectId: props.projectId },
+    })
+  }
+  catch {
+    toast.error('Unable to cancel request')
+  }
+}
 </script>
 
 <template>
+  <ConversationsPastDialog
+    :open="pastConversationsOpen"
+    :project-id="projectId"
+    @select="(id) => selectedConversationId = id"
+    @update:open="pastConversationsOpen = $event"
+  />
   <div class="flex h-full flex-col bg-sidebar">
     <div class="h-8.75 flex items-center justify-between border-b">
       <div class="text-sm truncate pl-3">
@@ -104,6 +123,7 @@ async function handleSubmit(message: PromptInputMessage) {
         <Button
           size="icon-xs"
           variant="highlight"
+          @click="pastConversationsOpen = true"
         >
           <HistoryIcon class="size-3.5" />
         </Button>
