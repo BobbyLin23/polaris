@@ -8,6 +8,9 @@ import { indentationMarkers } from '@replit/codemirror-indentation-markers'
 import { customSetup } from './extensions/custom-setup'
 import { getLanguageExtension } from './extensions/language-extension'
 import { minimap } from './extensions/minimap'
+import { quickEdit } from './extensions/quick-edit'
+import { suggestion } from './extensions/suggestion'
+import { selectionTooltip } from './extensions/suggestion-tooltip'
 import { customTheme } from './extensions/theme'
 
 const props = withDefaults(
@@ -36,6 +39,9 @@ const baseExtensions: Extension[] = [
   keymap.of([indentWithTab]),
   minimap(),
   indentationMarkers(),
+  suggestion(props.fileName),
+  quickEdit(props.fileName),
+  selectionTooltip(),
   EditorView.updateListener.of((update) => {
     if (update.docChanged) {
       emits('change', update.state.doc.toString())
@@ -62,7 +68,8 @@ onMounted(() => {
 
 watch(() => props.fileName, (fileName) => {
   const view = viewRef.value
-  if (!view) return
+  if (!view)
+    return
 
   view.dispatch({
     effects: languageCompartment.reconfigure(getLanguageExtension(fileName)),
