@@ -104,7 +104,7 @@ function handleCreate(name: string) {
           @submit="handleCreate"
           @cancel="isCreating = null"
         />
-        <FileTree
+        <FileTheTree
           v-for="file in rootFiles ?? []"
           :key="`${file.id}-${collapseKey}`"
           :item="file"

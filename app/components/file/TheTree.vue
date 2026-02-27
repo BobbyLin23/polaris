@@ -146,7 +146,7 @@ function startCreating(type: 'file' | 'folder') {
           @submit="handleCreate"
           @cancel="creating = null"
         />
-        <FileTree
+        <FileTheTree
           v-for="subItem in folderContents ?? []"
           :key="subItem.id"
           :item="subItem"
@@ -166,7 +166,7 @@ function startCreating(type: 'file' | 'folder') {
       />
       <template v-if="isOpen">
         <FileLoadingView v-if="folderContents === undefined" :level="level + 1" />
-        <FileTree
+        <FileTheTree
           v-for="subItem in folderContents ?? []"
           :key="subItem.id"
           :item="subItem"
@@ -202,7 +202,7 @@ function startCreating(type: 'file' | 'folder') {
       </FileTreeItemWrapper>
       <template v-if="isOpen">
         <FileLoadingView v-if="folderContents === undefined" :level="level + 1" />
-        <FileTree
+        <FileTheTree
           v-for="subItem in folderContents ?? []"
           :key="subItem.id"
           :item="subItem"

@@ -1,3 +1,4 @@
+import { createConversation, getConversationsByProject, getMessages } from './conversations'
 import {
   createFile,
   createFolder,
@@ -16,6 +17,7 @@ import {
   getProjectsPartial,
   renameProject,
 } from './projects'
+import { createMessage, getConversationById, updateMessageContent } from './system'
 
 export const routers = {
   projects: {
@@ -35,5 +37,16 @@ export const routers = {
     updateFile,
     getFile,
     getFilePath,
+  },
+  system: {
+    getConversationById,
+    createMessage,
+    updateMessageContent,
+  },
+  conversations: {
+    create: createConversation,
+    getById: getConversationById,
+    getByProject: getConversationsByProject,
+    getMessages,
   },
 }

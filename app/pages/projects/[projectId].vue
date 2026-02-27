@@ -13,9 +13,7 @@ const projectId = route.params.projectId as string
         class="flex-1"
       >
         <ResizablePanel :default-size="40" :min-size="20" :max-size="80">
-          <div class="flex h-[200px] items-center justify-center p-6">
-            <span class="font-semibold">One</span>
-          </div>
+          <ConversationsSidebar :project-id="projectId" />
         </ResizablePanel>
         <ResizableHandle />
         <ResizablePanel :default-size="60">

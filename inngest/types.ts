@@ -7,4 +7,22 @@ interface DemoGenerateEvent {
   }
 }
 
-export const schemas = new EventSchemas().fromUnion<DemoGenerateEvent>()
+interface MessageCancelEvent {
+  name: 'message/cancel'
+  data: {
+    messageId: string
+  }
+}
+
+interface MessageSentEvent {
+  name: 'message/sent'
+  data: {
+    messageId: string
+  }
+}
+
+export const schemas = new EventSchemas().fromUnion<
+  DemoGenerateEvent
+  | MessageCancelEvent
+  | MessageSentEvent
+>()

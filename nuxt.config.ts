@@ -20,7 +20,13 @@ export default defineNuxtConfig({
   ],
   shadcn: {
     prefix: '',
-    componentDir: '@/components/ui',
+    componentDir: [
+      '@/components/ui',
+      {
+        path: '@/components/ai-elements',
+        prefix: '',
+      },
+    ],
   },
   colorMode: {
     classSuffix: '',

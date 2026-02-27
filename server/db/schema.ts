@@ -137,3 +137,50 @@ export const file = pgTable('file', {
   index('file_parentId_idx').on(table.parentId),
   index('file_projectId_parentId_idx').on(table.projectId, table.parentId),
 ])
+
+export const conversation = pgTable('conversation', {
+  id: text('id').primaryKey().$defaultFn(() => createId()),
+  projectId: text('project_id').notNull().references(() => project.id, { onDelete: 'cascade' }),
+  title: text('title').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at')
+    .defaultNow()
+    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .notNull(),
+}, table => [
+  index('conversation_projectId_idx').on(table.projectId),
+])
+
+export const messageRole = pgEnum(
+  'message_role',
+  [
+    'user',
+    'assistant',
+  ],
+)
+
+export const messageStatus = pgEnum(
+  'message_type',
+  [
+    'processing',
+    'completed',
+    'cancelled',
+  ],
+)
+
+export const message = pgTable('message', {
+  id: text('id').primaryKey().$defaultFn(() => createId()),
+  conversationId: text('conversation_id').notNull().references(() => conversation.id, { onDelete: 'cascade' }),
+  projectId: text('project_id').notNull().references(() => project.id, { onDelete: 'cascade' }),
+  role: messageRole('role').notNull(),
+  content: text('content').notNull(),
+  status: messageStatus('status'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at')
+    .defaultNow()
+    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .notNull(),
+}, table => [
+  index('message_conversationId_idx').on(table.conversationId),
+  index('message_projectId_status_idx').on(table.projectId, table.status),
+])
